@@ -2,7 +2,11 @@
 
 # Exclude dirs
 !/src
+!/tests
 
 # Exclude files
 !/.gitignore
 !/package.json
+!/build.js
+!/README.md
+!/tsconfig.json
