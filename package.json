@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon ./src/index.ts",
-    "build": "node build.js"
+    "build": "node build.js && tsc"
   },
   "devDependencies": {
     "@types/node": "^18.14.0",
