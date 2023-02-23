@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "target": "ESNext",
+
+        // Type checking
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        "noFallthroughCasesInSwitch": true,
+
+        // Declarations
+        "declaration": true,
+        "declarationDir": "./types",
+        "emitDeclarationOnly": true,
+        
+        // Interop
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+
+        // Etc
+        "allowJs": true,
+    },
+    "exclude": ["node_modules"],
+    "include": ["src"]
+}
