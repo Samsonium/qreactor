@@ -10,3 +10,6 @@
 !/build.js
 !/README.md
 !/tsconfig.json
+!/.npmignore
+!/CHANGELOG.md
+!/jestconfig.json
