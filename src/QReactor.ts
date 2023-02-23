@@ -1,4 +1,7 @@
-import { default as fastify, FastifyInstance } from "fastify";
+import { default as fastify, FastifyInstance, FastifyRequest, FastifyReply, DoneFuncWithErrOrRes } from "fastify";
+import IQReactorConfig from "./configs/IQReactorConfig";
+import FakeClass from "./FakeClass";
+import IRoute from "./decorators/IRoute";
 
 // Plugins
 import fastifyJwt from "@fastify/jwt";
@@ -6,7 +9,6 @@ import fastifyCors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import fastifyCompress from "@fastify/compress";
-import IQReactorConfig from "./configs/IQReactorConfig";
 
 /**
  * Базовый класс QReactor
@@ -60,6 +62,41 @@ export default class QReactor {
 
         // Setup compress
         f.register(fastifyCompress);
+    }
+    
+    //////////////// МЕТОДЫ ////////////////
+
+    /** Добавить роутер */
+    public add(...routers: FakeClass[]): void {
+        routers.forEach(r => {
+            const _instance = new r();
+            const _prefix: string = Reflect.getMetadata('prefix', r);
+            const routes: IRoute[] = Reflect.getMetadata('routes', r);
+            routes.forEach(route => {
+                if (route.mws.length) this.f[route.method](
+                    _prefix + (route.path.startsWith('/') || _prefix.substring(-1) ? '' : '/') + route.path,
+                    async (request: FastifyRequest, response: FastifyReply) => {
+                        await _instance[route.name](request, response);
+                    }
+                );
+                else this.f[route.method](
+                    _prefix + (route.path.startsWith('/') || _prefix.substring(-1) ? '' : '/') + route.path,
+                    async (request: FastifyRequest, response: FastifyReply) => {
+                        await _instance[route.name](request, response);
+                    }
+                );
+            });
+        });
+    }
+
+    /** Запустить сервер */
+    public Launch(port: number): Promise<void> {
+        return new Promise<void>(r => this.f.listen({ port }, () => r()));
+    }
+
+    /** Остановить сервер */
+    public async Stop(): Promise<void> {
+        await this.f.close();
     }
 
     //////////////// ГЕТТЕРЫ ////////////////
